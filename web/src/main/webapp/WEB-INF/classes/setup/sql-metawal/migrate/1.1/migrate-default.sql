@@ -8,7 +8,7 @@ DELETE FROM Settings WHERE id > 958;
 DELETE FROM Settings WHERE id=2;
 
 
-ALTER TABLE Settings ALTER name TYPE varchar(512);
+ALTER TABLE Settings MODIFY name varchar(512);
 
 -- 0 is char, 1 is number, 2 is boolean
 ALTER TABLE Settings ADD datatype int;
@@ -138,7 +138,7 @@ ALTER TABLE Settings ADD PRIMARY KEY (name);
 -- Add new settings
 INSERT INTO settings (name, value, datatype, position) VALUES ('system/feedback/mailServer/username', '', 0, 642);
 INSERT INTO settings (name, value, datatype, position) VALUES ('system/feedback/mailServer/password', '', 0, 643);
-INSERT INTO settings (name, value, datatype, position) VALUES ('system/feedback/mailServer/ssl', false, 2, 641);
+INSERT INTO settings (name, value, datatype, position) VALUES ('system/feedback/mailServer/ssl', 'false', 2, 641);
 
 
 

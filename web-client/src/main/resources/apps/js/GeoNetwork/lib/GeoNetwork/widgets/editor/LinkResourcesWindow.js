@@ -389,14 +389,22 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
                 if (this.uploadForm.getForm().isValid()) {
                     var panel = this;
                     if (this.uploadThumbnail) {
-                        this.uploadForm.getForm().submit({
-                            url: this.setThumbnail,
-                            waitMsg: OpenLayers.i18n('uploading'),
-                            success: function (fp, o) {
-                                self.editor.init(self.metadataId);
-                                self.hide();
-                            }
+                        // Save current edits
+                        this.editor.loadUrl('metadata.update.new', undefined, function () {
+                            // Update version
+                            panel.versionField.setValue(document.mainForm.version.value);
+                            // and upload thumbnails
+                            panel.uploadForm.getForm().submit({
+                                url: panel.setThumbnail,
+                                waitMsg: OpenLayers.i18n('uploading'),
+                                success: function (fp, o) {
+                                    self.editor.init(self.metadataId);
+                                    self.hide();
+                                }
+                            });
+                            
                         });
+                        
                     } else {
                         this.runProcess();
                     }
@@ -607,7 +615,33 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
                 anchor: '90%',
                 fieldLabel: OpenLayers.i18n('URL'),
                 name: 'href',
-                value: ''
+                value: '',
+                validFn: function(value){
+                    if(value && value.indexOf('http') == 0) {
+                        var request = OpenLayers.Request.HEAD({
+                            url: value,
+                            async: false
+                        });
+                        var success = (request.status == '200');
+                        if(success) {
+                            this.el.addClass('x-form-valid');
+                            if(this.el.hasClass('x-form-invalid')) {
+                                this.el.removeClass('x-form-invalid');
+                            }
+                        } else {
+                            if(this.el.hasClass('x-form-valid')) {
+                                this.el.removeClass('x-form-valid');
+                            }
+                            this.el.addClass('x-form-invalid');
+
+                        }
+                    }
+                },
+                listeners: {
+                    blur: function(cpt) {
+                        cpt.validFn(cpt.getValue());
+                    }
+                }
             }],
             listeners: {
                 collapse: {
@@ -653,6 +687,7 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
                         combo.ownerCt.find('name', 'refreshCapabilities-Btn')[0].setVisible(visible);
                         
                         var urlField = combo.ownerCt.find('name', 'href')[0];
+                        urlField.validFn(urlField.getValue());
                         if(visible && urlField && urlField.isVisible() && urlField.getValue() != '') {
                             this.capabilitiesStore.baseParams.url = urlField.getValue();
                             this.capabilitiesStore.reload({params: {url: urlField.getValue()}});
@@ -925,7 +960,8 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
             xtype: 'spacer',
             height: 20
         });
-        cmp.push(this.getFormFieldForService());
+        var serviceField = this.getFormFieldForService();
+        serviceField && cmp.push(serviceField);
         
         this.formPanel = new Ext.form.FormPanel({
             items: cmp,

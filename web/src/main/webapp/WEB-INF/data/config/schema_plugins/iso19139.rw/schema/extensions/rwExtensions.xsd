@@ -45,6 +45,7 @@
 					<xs:element name="tableIdent" type="rw:tableIdent_Type" minOccurs="0"
 						maxOccurs="unbounded"/>
 				</xs:sequence>
+				<xs:attribute ref="gco:isoType" use="required" fixed="gmd:MD_Metadata"/>
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
@@ -140,6 +141,7 @@
 					<xs:element name="legalReference" type="gco:CharacterString_PropertyType"
 						minOccurs="0"/>
 				</xs:sequence>
+				<xs:attribute ref="gco:isoType" use="required" fixed="gmd:MD_LegalConstraints"/>
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
@@ -158,6 +160,7 @@
 					<xs:element name="responsiblePartyLanguage" type="gmd:LanguageCode_PropertyType"
 						minOccurs="0"/>
 				</xs:sequence>
+				<xs:attribute ref="gco:isoType" use="required" fixed="gmd:CI_ResponsibleParty"/>
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
@@ -176,6 +179,7 @@
 					<xs:element name="legalStatement" type="gco:CharacterString_PropertyType"
 						minOccurs="0"/>
 				</xs:sequence>
+				<xs:attribute ref="gco:isoType" use="required" fixed="gmd:LI_Lineage"/>
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
