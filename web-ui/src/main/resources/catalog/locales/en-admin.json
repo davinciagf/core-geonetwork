@@ -693,4 +693,11 @@
     
     
     "emptyCatalogShouldBeFilled": "The catalog is empty, you probably want to import new records or configure a harvester. You could also insert <a href='#/metadata/metadata-and-template/load-templates/all'>all templates</a>, <a href='#/metadata/metadata-and-template/load-samples/all'>all samples</a> or <a href='#/metadata/metadata-and-template/load-samples-and-templates/all'>both</a>."
+    "transfertPrivs":"Transfert ownership",
+    "sourceeditor":"Source editor",
+    "sourceGroup":"Source group",
+    "targetGroup":"Target group",
+    "targetEditor":"Target editor",
+    "transfertPriv":"Transfer",
+   
 }

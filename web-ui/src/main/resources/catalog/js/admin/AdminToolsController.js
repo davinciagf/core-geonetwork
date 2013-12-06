@@ -37,9 +37,9 @@
               icon: 'icon-medkit',
               href: '#/tools/batch'
             },{
-              type: 'transfert-privs',
-              label: 'transfertPrivs',
-              href: 'transfer.ownership'
+                type: 'transferownership',
+                label: 'transfertPrivs',
+                href: '#/tools/transferownership'
             },{
               type: 'formatter',
               label: 'manageFormatter',
@@ -108,6 +108,10 @@
       $scope.batchSearchGroups = {};
       $scope.batchSearchUsers = {};
       $scope.batchSearchCategories = {};
+      $scope.editors = {};
+      $scope.groupinfo = {};
+      $scope.editorsSelectedId = null;
+      
 
       function loadProcessConfig() {
         $http.get($scope.base + 'config/batch-process-cfg.json')
@@ -138,7 +142,63 @@
           // TODO
         });
       }
-
+      
+      function loadEditors() {
+          $http.get('xml.ownership.editors@json')
+            .success(function(data) {
+                $scope.editors = data;
+              });
+      }
+      $scope.selectUser = function(id) {
+    	  $scope.editorsSelectedId = id;
+    	  $http.get('xml.ownership.groups@json?id=' + id)
+          .success(function(data) {
+            // If user does not have group and only one
+            // target group, a simple object is returned
+            // and it should be a target group ? FIXME
+            if (!data.group && !data.targetGroup) {
+              data.targetGroup = data;
+            }
+            // Make all group and targetGroup arrays.
+             $scope.groupinfo = {
+                 group: [].concat(data.group),
+                 targetGroup: [].concat(data.targetGroup)
+                 };
+             console.log($scope.groupinfo);
+             
+             
+       });
+      };
+      $scope.transfertList = {};
+      
+      $scope.tranferOwnership= function(sourceGroup){
+    	  var params = $scope.transfertList[sourceGroup];
+    	  
+    	  // check params.targetGroup.id and params.targetEditor defined
+    	  
+    	  var xml = '<request><sourceUser>'+$scope.editorsSelectedId+
+    	  '</sourceUser><sourceGroup>'+sourceGroup+
+    	  '</sourceGroup><targetUser>'+params.targetEditor+
+    	  '</targetUser><targetGroup>'+params.targetGroup.id+
+    	  '</targetGroup></request>';
+    	  
+    	  params.running = true;
+    	  $http.post('xml.ownership.transfer@json', xml, {
+              headers: {'Content-type': 'application/xml'}
+            }).success(function(data) {
+            	 $rootScope.$broadcast('StatusUpdated', {
+                     msg: $translate('transfertPrivilegesFinished') + data.metadata + ' processed.',
+                     timeout: 2,
+                     type: 'success'});
+            	params.running = false;
+            }).error(function(data) {
+              // TODO
+            	params.running = false;
+            });
+      };
+      $scope.isRunning = function(sourceGroup) {
+    	  return $scope.transfertList[sourceGroup].running;
+      };
       /**
        * Check process progress every ...
        */
@@ -197,6 +257,8 @@
       loadGroups();
       loadUsers();
       loadCategories();
+      loadEditors();
+
 
 
       $scope.recordsToProcessSearchFor = function(e) {
