@@ -5,7 +5,6 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 	<General>
 		<Window width="973" height="741"/>
-		<!--<BoundingBox minx="17736" miny="23697" maxx="297289" maxy="245375" SRS="EPSG:31370"/>-->
 		<BoundingBox minx="-180" miny="-90" maxx="180" maxy="90" SRS="EPSG:4326"/>
 		<Title/>
 	</General>
@@ -13,12 +12,12 @@
 		<Layer queryable="0" hidden="0">
 			<Server service="OGC:WMS" version="1.1.1">
 				<OnlineResource xlink:type="simple"
-					xlink:href="http://geoservices.valid.wallonie.be/arcgis/services/DONNEES_BASE/FDP_LIGHT/MapServer/WMSServer"/>
+					xlink:href="http://localhost:8080/geoserver/wms?SERVICE=WMS"/>
 			</Server>
-			<Name>0,1,2</Name>
-			<Title>Fond de carte</Title>
+			<Name>gn:world</Name>
+			<Title>World</Title>
 			<FormatList>
-				<Format current="1">image/png</Format>
+				<Format current="1">image/jpeg</Format>
 			</FormatList>
 			<StyleList>
 				<Style>
@@ -31,6 +30,31 @@
 				<ol:transparent>false</ol:transparent>
 				<ol:numZoomLevels>15</ol:numZoomLevels>
 				<ol:isBaseLayer>true</ol:isBaseLayer>
+				<ol:displayInLayerSwitcher>true</ol:displayInLayerSwitcher>
+				<ol:singleTile>false</ol:singleTile>
+			</Extension>
+		</Layer>
+		<Layer queryable="0" hidden="0">
+			<Server service="OGC:WMS" version="1.1.1">
+				<OnlineResource xlink:type="simple"
+					xlink:href="http://localhost:8080/geoserver/wms?SERVICE=WMS"/>
+			</Server>
+			<Name>gn:ne_50m_boundary_da,gn:ne_50m_boundary_lines_land,gn:ne_50m_coastline</Name>
+			<Title>Country boundaries</Title>
+			<FormatList>
+				<Format current="1">image/png</Format>
+			</FormatList>
+			<StyleList>
+				<Style>
+					<Name/>
+					<Title>Default</Title>
+				</Style>
+			</StyleList>
+			<Extension>
+				<ol:tileSize width="256" height="256"/>
+				<ol:transparent>true</ol:transparent>
+				<ol:numZoomLevels>15</ol:numZoomLevels>
+				<ol:isBaseLayer>false</ol:isBaseLayer>
 				<ol:displayInLayerSwitcher>true</ol:displayInLayerSwitcher>
 				<ol:singleTile>true</ol:singleTile>
 			</Extension>
